@@ -22,26 +22,6 @@ public class Main {
             System.exit(0);
         }
 
-       /* //get Dfa number to append to output file name
-        //catch if input file's name is not what expected, it's whatever
-        String dfaNumber=null;
-        //catch dfa with number greater than 1
-        try {
-            dfaNumber = inputFile.substring(3, 5);
-        }
-        catch (StringIndexOutOfBoundsException e)
-        {
-            try
-            {
-                dfaNumber=inputFile.substring(3,4);
-            }
-            catch (StringIndexOutOfBoundsException ee)
-            {
-                e.printStackTrace();
-            }
-
-        }*/
-
         //set up stream with input file
         Scanner inStream=null;
         try
@@ -140,14 +120,6 @@ public class Main {
         for (String setAcceptState : setAcceptStates) {
             acceptStates.add(Integer.valueOf(setAcceptState));
         }
-
-        /*//grab all the remaining input strings to be tested
-        ArrayList<String> stringInputs=new ArrayList<>();
-        while (inStream.hasNext())
-        {
-            //stringInputs.add(inStream.next());
-            stringInputs.add(inStream.nextLine());
-        }*/
 
         //close the stream
         inStream.close();

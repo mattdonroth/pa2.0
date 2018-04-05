@@ -83,39 +83,6 @@ public class NFA {
         //add all states that can be reached by epsilon transition, e-closure
         beginSet=getEpsilonTransitions(beginSet);
 
-        /*HashSet<Integer> epsilonTransitions=transitionMap.get(startState+""+'e');
-        if (epsilonTransitions!=null) {
-            if (beginSet.addAll(epsilonTransitions)) {
-                //beginSet.addAll(epsilonTransitions);
-                boolean eClosure = false;
-                while (!eClosure) {
-                    //System.out.println("while not e-closure");
-                    HashSet<Integer> newSet = new HashSet<>();
-                    for (int state : epsilonTransitions) {
-                        HashSet<Integer> temp = transitionMap.get(state+""+'e');
-                        if (temp != null) {
-                            //newSet.addAll(temp);
-                            if (beginSet.addAll(temp)) {
-                                newSet.addAll(temp);
-                                eClosure = false;
-                            }
-                            else
-                                eClosure = true;
-                        }
-                        else
-                        {
-                            eClosure=true;
-                        }
-                    }
-                    if (!eClosure) {
-                        epsilonTransitions = newSet;
-                    }
-                }
-            }
-        }*/
-
-        //HashSet<Integer> startSet=beginSet;
-
         //get transitions from this beginSet, add them to conversionTransitionFunctions, put their end sets in q to get transitions for those end sets
         getTransitions(q, conversionTransitionFunctions, beginSet);
 
@@ -252,36 +219,6 @@ public class NFA {
             if (!endSet.isEmpty()) {
                 //get set of all possible states epsilon transitions can reach
                 endSet=getEpsilonTransitions(endSet);
-
-
-                /*HashSet<Integer> epsilonTransitionStartSet=new HashSet<>(beginSet);
-                //beginSet.addAll(epsilonTransitions);
-                boolean eClosure=false;
-                while (!eClosure)
-                {
-                    //System.out.println("while not eclosure 2");
-                    HashSet<Integer> newSet=new HashSet<>();
-                    for (int state:epsilonTransitionStartSet) {
-                        HashSet<Integer> temp=transitionMap.get(state+""+'e');
-                        if (temp!=null) {
-                            //newSet.addAll(temp);
-                            //add these states to endSet
-                            if (endSet.addAll(temp)) {
-                                newSet.addAll(temp);
-                                eClosure = false;
-                            }
-                            else
-                                eClosure = true;
-                        }
-                        else
-                        {
-                            eClosure=true;
-                        }
-                    }
-                    if (!eClosure) {
-                        epsilonTransitionStartSet = newSet;
-                    }
-                }*/
             }
             else
             //there are no transitions for this symbol, make one to reject state

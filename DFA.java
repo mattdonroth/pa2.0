@@ -35,40 +35,6 @@ public class DFA {
     {
     }
 
-    /*public void test(PrintWriter outStream) {
-        //for each string we want to test
-        for (String stringInput : stringInputs)
-        {
-            int currentState=startState;
-            char currentChar;
-            boolean accept=false;
-            //iterate through the string/dfa
-            for (int i=0;i<stringInput.length(); i++ )
-            {
-                currentChar=stringInput.charAt(i);
-                //make the key out of the current state and current char
-                String key=currentState+""+currentChar;
-                currentState=transitionMap.get(key);
-            }
-            //if the end state is an accepting state then we accept else reject
-            for (Integer acceptState : acceptStates) {
-                if (currentState == acceptState) {
-                    accept = true;
-                }
-            }
-            if (accept)
-            {
-                outStream.println("Accept");
-            }
-            else
-            {
-                outStream.println("Reject");
-            }
-        }
-        //close stream;
-        outStream.close();
-    }*/
-
     //getters and setters
     public int getNumberStates() {
         return numberStates;
