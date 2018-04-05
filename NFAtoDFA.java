@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.*;
+
 public class NFAtoDFA {
 	public static void main(String [] args){	
 		String inputFile = args[0]; 
@@ -361,37 +362,7 @@ public class NFAtoDFA {
 		}
 		return ret;
 	}
-	/*
-	 * Used purely for testing purposes because the DFA's we created were not all 
-	 * identical to yours
-	 */
-	public static int simulate(int startState, String trans, int [][] states, String [] alphabet){
-		int currentState = startState;
-		String symbol;
-		//keeps the correct index for the transition
-		int colIndex=0;
-		//runs until there are no more characters in the string
-		for(int i = 0; i<trans.length(); i++){
-			symbol = trans.substring(i, i + 1);
-			//gets one character of the string at s time
-			for(int j = 0; j<alphabet.length; j++){
-				if(symbol.equals(alphabet[j])){
-					//if the symbol is in the alphabet then changes the value of colIndex
-					colIndex = j;
-					//changes current state to the updated state
-					currentState = states[currentState][colIndex];
 
-				}
-				else{
-					continue;
-				}
-			}
-			if(currentState == -1){
-				return 0;
-			}
-		}
-		return currentState;
-	}
 }
 /*
  * dfaState class used to hold onto all the NFA states that composed
