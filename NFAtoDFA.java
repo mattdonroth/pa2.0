@@ -72,7 +72,7 @@ public class NFAtoDFA {
 		for(int i = 0; i < parts.length; i++){
 			acceptStates[i] = Integer.parseInt(parts[i]);
 		}
-		ArrayList<dfaState> finalDfa = NFAConversion(startState, states, numLetters);
+		ArrayList<dfaState> finalDfa = nfaConversion(startState, states, numLetters);
 		int [][] dfaState = dfaConversion(finalDfa, numLetters, states);
 		PrintWriter printer = null; 
 		try{
@@ -95,7 +95,7 @@ public class NFAtoDFA {
 		}
 		printer.println(1);
 		for(int g = 0; g<finalDfa.size(); g++){
-			if(inAcceptState(finalDfa.get(g), acceptStates)){
+			if(inAccept(finalDfa.get(g), acceptStates)){
 				printer.print((g + 1) + " ");
 			}
 		}
@@ -103,7 +103,7 @@ public class NFAtoDFA {
 
 	}
 
-	public static ArrayList<dfaState> NFAConversion(int startState, ArrayList<Integer>[][] states, int numLetters){
+	public static ArrayList<dfaState> nfaConversion(int startState, ArrayList<Integer>[][] states, int numLetters){
 		ArrayList<dfaState> dfa = new ArrayList<dfaState>();
 		ArrayList<Integer> starter = new ArrayList<Integer>();
 		starter = nextStates(states, startState, numLetters, numLetters);
@@ -257,7 +257,7 @@ public class NFAtoDFA {
 		return ret;
 	}
 
-	public static boolean inAcceptState(dfaState a, int [] acceptStates){
+	public static boolean inAccept(dfaState a, int [] acceptStates){
 		boolean ret = false;
 		for(int i = 0; i < a.size; i++){
 			for(int j = 0; j < acceptStates.length; j++){
