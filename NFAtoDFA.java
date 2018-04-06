@@ -72,9 +72,54 @@ public class NFAtoDFA {
 		for(int i = 0; i < parts.length; i++){
 			acceptStates[i] = Integer.parseInt(parts[i]);
 		}
-		ArrayList<dfaState> finalDfa = nfaConversion(startState, states, numLetters);
+
+
+        ArrayList<dfaState> finalDfa = new ArrayList<dfaState>();
+        ArrayList<Integer> start = new ArrayList<Integer>();
+        start = nextStates(states, startState, numLetters, numLetters);
+        start.add(startState);
+        dfaState stat = new dfaState(start);
+        Queue<dfaState> q = new LinkedList<dfaState>();
+        q.add(stat);
+        finalDfa.add(stat);
+        dfaState temp;
+        ArrayList<Integer> [] a = null;
+        int emptySetCount = 0;
+        while(!q.isEmpty()){
+            temp = new dfaState(q.remove().states);
+            for(int i = 0; i < numLetters; i++){
+                ArrayList<Integer> allTheNfa = new ArrayList<Integer>();
+                a = (ArrayList<Integer>[]) new ArrayList[temp.size];
+                for(int j = 0; j < temp.states.size(); j++){
+                    a[j] = nextStates(states, temp.states.get(j), i, numLetters);
+
+                }
+                for(int x = 0; x < a.length; x++){
+                    for(int z = 0; z < a[x].size(); z++){
+                        if(!allTheNfa.contains(a[x].get(z))){
+                            allTheNfa.add(a[x].get(z));
+                        }
+                    }
+                }
+
+                if(allTheNfa.size() == 0 && emptySetCount == 0){
+                    dfaState empty = new dfaState(allTheNfa);
+                    finalDfa.add(empty);
+                    emptySetCount++;
+                }
+                if(allTheNfa.size() == 0){
+                    continue;
+                }
+                if(viewed(finalDfa, allTheNfa) == false){
+                    dfaState e = new dfaState(allTheNfa);
+                    q.add(e);
+                    finalDfa.add(e);
+                }
+            }
+        }
+
 		int [][] dfaState = dfaConversion(finalDfa, numLetters, states);
-		PrintWriter printer = null; 
+		PrintWriter printer = null;
 		try{
 			printer = new PrintWriter(outputFile);
 		}
@@ -103,52 +148,6 @@ public class NFAtoDFA {
 
 	}
 
-	public static ArrayList<dfaState> nfaConversion(int startState, ArrayList<Integer>[][] states, int numLetters){
-		ArrayList<dfaState> dfa = new ArrayList<dfaState>();
-		ArrayList<Integer> starter = new ArrayList<Integer>();
-		starter = nextStates(states, startState, numLetters, numLetters);
-		starter.add(startState);
-		dfaState start = new dfaState(starter);
-		Queue<dfaState> q = new LinkedList<dfaState>();
-		q.add(start);
-		dfa.add(start);
-		dfaState temp; 
-		ArrayList<Integer> [] a = null;
-		int emptySetCount = 0;
-		while(!q.isEmpty()){
-			temp = new dfaState(q.remove().states);
-			for(int i = 0; i < numLetters; i++){
-				ArrayList<Integer> allTheNfa = new ArrayList<Integer>();
-				a = (ArrayList<Integer>[]) new ArrayList[temp.size];
-				for(int j = 0; j < temp.states.size(); j++){
-					a[j] = nextStates(states, temp.states.get(j), i, numLetters);
-				}
-				for(int x = 0; x < a.length; x++){
-					for(int z = 0; z < a[x].size(); z++){
-						if(!allTheNfa.contains(a[x].get(z))){
-							allTheNfa.add(a[x].get(z));
-						}
-					}
-				}
-				
-				if(allTheNfa.size() == 0 && emptySetCount == 0){
-					dfaState empty = new dfaState(allTheNfa);
-					dfa.add(empty);
-					emptySetCount++;
-					continue;
-				}
-				if(allTheNfa.size() == 0){
-					continue;
-				}
-				if(viewed(dfa, allTheNfa) == false){
-					dfaState e = new dfaState(allTheNfa);
-					q.add(e);
-					dfa.add(e);
-				}
-			}
-		}
-		return dfa;
-	}
 	public static int[][] dfaConversion(ArrayList<dfaState> dfa, int numLetters, ArrayList<Integer>[][] states){
 	    int [][] state = new int [dfa.size()][numLetters];
 		for(int i = 0; i < dfa.size(); i++){
