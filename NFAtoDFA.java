@@ -140,7 +140,7 @@ public class NFAtoDFA {
 				if(allTheNfa.size() == 0){
 					continue;
 				}
-				if(seen(dfa, allTheNfa) == false){
+				if(viewed(dfa, allTheNfa) == false){
 					dfaState e = new dfaState(allTheNfa);
 					q.add(e);
 					dfa.add(e);
@@ -196,7 +196,7 @@ public class NFAtoDFA {
 		}
 		return state;	
 	}
-	public static boolean seen(ArrayList<dfaState> d, ArrayList<Integer> allTheNfa){
+	public static boolean viewed(ArrayList<dfaState> d, ArrayList<Integer> allTheNfa){
 		boolean ret = false;
 		int count;
 		for(int i = 0; i < d.size(); i++){
