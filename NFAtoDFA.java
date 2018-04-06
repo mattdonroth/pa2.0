@@ -1,4 +1,5 @@
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class NFAtoDFA {
@@ -73,7 +74,9 @@ public class NFAtoDFA {
 			acceptStates[i] = Integer.parseInt(parts[i]);
 		}
 
-
+        /*TODO Dfa conversion, I fucked up 1 variable, the output on the next state of the transitions is off by one:(
+        TODO source is below
+         */
         ArrayList<dfaState> finalDfa = new ArrayList<dfaState>();
         ArrayList<Integer> start = new ArrayList<Integer>();
         start = nextStates(states, startState, numLetters, numLetters);
@@ -118,7 +121,61 @@ public class NFAtoDFA {
             }
         }
 
+        /*TODO using the function
+        I think this'll work tho, its the nfa convert which is fucked.
+         */
 		int [][] dfaState = dfaConversion(finalDfa, numLetters, states);
+        /*
+        int [][] dfaState = new int [finalDfa.size()][numLetters];
+        for(int i = 0; i < finalDfa.size(); i++){
+            for(int j = 0; j < numLetters; j++){
+                dfaState[i][j] = -1;
+            }
+        }
+        ArrayList<Integer> [] tempState;
+        int emptyDfaStateIndex = 0;
+        for(int index = 0; index < finalDfa.size(); index++){
+            if(finalDfa.get(index).empty == true){
+                emptyDfaStateIndex = index;
+                break;
+            }
+        }
+        for(int i = 0; i < numLetters; i++){
+            for(int j = 0; j < finalDfa.size(); j++){
+                tempState = (ArrayList<Integer>[]) new ArrayList[finalDfa.get(j).size];
+                for(int k = 0; k < tempState.length; k++){
+                    tempState[k] = nextStates(states, finalDfa.get(j).states.get(k), i, numLetters);
+
+                }
+                ArrayList<Integer> possStates = new ArrayList<Integer>();
+                for(int f = 0; f < tempState.length; f++){
+                    for(int g = 0; g < tempState[f].size(); g++){
+                        if(!possStates.contains(tempState[f].get(g))){
+                            possStates.add(tempState[f].get(g));
+                        }
+                    }
+                }
+                dfaState poss = new dfaState(possStates);
+                if(poss.empty == true){
+                    dfaState[j][i] = emptyDfaStateIndex;
+                    continue;
+                }
+                int count = 0;
+                for(int m = 0; m < finalDfa.size(); m++){
+                    if(compare(finalDfa.get(m), poss)){
+                        break;
+                    }
+                    count++;
+                }
+                dfaState[j][i] = count;
+            }
+        }
+        */
+
+
+
+
+
 		PrintWriter printer = null;
 		try{
 			printer = new PrintWriter(outputFile);
@@ -155,7 +212,7 @@ public class NFAtoDFA {
 				state[i][j] = -1;
 			}
 		}
-		ArrayList<Integer> [] tempState; 
+		ArrayList<Integer> [] tempState;
 		int emptyDfaStateIndex = 0;
 		for(int index = 0; index < dfa.size(); index++){
 			if(dfa.get(index).empty == true){
@@ -177,7 +234,7 @@ public class NFAtoDFA {
 						}
 					}
 				}
-				dfaState poss = new dfaState(possStates);	
+				dfaState poss = new dfaState(possStates);
 				if(poss.empty == true){
 					state[j][i] = emptyDfaStateIndex;
 					continue;
@@ -193,8 +250,68 @@ public class NFAtoDFA {
 				state[j][i] = counter;
 			}
 		}
-		return state;	
+		return state;
 	}
+
+	/*
+public static ArrayList<dfaState> NFAConversion(int startState, ArrayList<Integer>[][] states, int numLetters){
+		ArrayList<dfaState> dfa = new ArrayList<dfaState>(); //array list of all the dfa states
+		ArrayList<Integer> starter = new ArrayList<Integer>();
+		starter = nextStates(states, startState, numLetters, numLetters);
+		starter.add(startState);
+		dfaState start = new dfaState(starter);//check if numLetters accounts for indexing
+		Queue<dfaState> q = new LinkedList<dfaState>();
+		q.add(start); //start state is already added to queue so that the queue is not empty
+		dfa.add(start); //add start to list of all dfa states
+		dfaState temp;
+		ArrayList<Integer> [] a = null;
+		int emptySetCount = 0;
+		//This queue contains dfa states, each time a new dfa state is seen, a dfastate is added
+		while(!q.isEmpty()){
+			temp = new dfaState(q.remove().states);
+			//For each of the letters in the alphabet
+			for(int i = 0; i < numLetters; i++){
+				ArrayList<Integer> allTheNfa = new ArrayList<Integer>();
+				a = (ArrayList<Integer>[]) new ArrayList[temp.size]; //array of arraylists to store the nfa states that correlate to a dfa state
+				//For every NFA state in the DFA state, add the possible NFA states that it can get to with a certain symbol to an array
+				//array a is an array of arraylists, each index of the array contains all of the NFA states that an NFA state can get to from symbol # i
+				for(int j = 0; j < temp.states.size(); j++){
+					a[j] = nextStates(states, temp.getStateNumber(j), i, numLetters); //i in this is the index of the transition
+				}
+				//Adds all of the arraylists of a into one arraylist called allTheNFA
+				//allTheNfa contains all of the NFA states that the NFA can get to from one symbol
+				for(int x = 0; x < a.length; x++){
+					for(int z = 0; z < a[x].size(); z++){
+						if(!allTheNfa.contains(a[x].get(z))){
+							allTheNfa.add(a[x].get(z)); //gets all the nfa states that correlate to a dfa state and stores them in an array list
+						}
+					}
+				}
+
+				//If allTheNfa is empty, there are no transitions out of the DFA state for a given letter
+				//Add a dfa state with empty = 1 to signify an empty DFA state
+				if(allTheNfa.size() == 0 && emptySetCount == 0){
+					dfaState empty = new dfaState(allTheNfa);
+					dfa.add(empty);
+					emptySetCount++;
+					continue;
+				}
+				//Don't want to add more than one empty DFA state
+				if(allTheNfa.size() == 0){
+					continue;
+				}
+				//If we have seen the dfa state, we don't want to enqueue or add it to the arraylist of unique states
+				if(seen(dfa, allTheNfa) == false){
+					dfaState e = new dfaState(allTheNfa);
+					q.add(e);
+					dfa.add(e);
+				}
+			}
+		}
+		return dfa;
+	}
+	 */
+
 	public static boolean viewed(ArrayList<dfaState> d, ArrayList<Integer> allTheNfa){
 		boolean ret = false;
 		int count;

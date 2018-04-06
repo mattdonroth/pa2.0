@@ -28,17 +28,17 @@
       <file leaf-file-name="NFAtoDFA.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/NFAtoDFA.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="425">
-              <caret line="80" column="43" lean-forward="false" selection-start-line="80" selection-start-column="43" selection-end-line="80" selection-end-column="43" />
+            <state relative-caret-position="600">
+              <caret line="123" column="14" lean-forward="false" selection-start-line="123" selection-start-column="14" selection-end-line="123" selection-end-column="14" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1918#1928#0" expanded="true" />
-                <element signature="e#1980#1989#0" expanded="true" />
-                <element signature="e#2183#2193#0" expanded="true" />
-                <element signature="e#2530#2539#0" expanded="true" />
-                <element signature="e#5181#5190#0" expanded="true" />
-                <element signature="e#6417#6426#0" expanded="true" />
-                <element signature="e#7558#7567#0" expanded="true" />
+                <element signature="e#2109#2119#0" expanded="true" />
+                <element signature="e#2171#2180#0" expanded="true" />
+                <element signature="e#2374#2384#0" expanded="true" />
+                <element signature="e#2721#2730#0" expanded="true" />
+                <element signature="e#7302#7311#0" expanded="true" />
+                <element signature="e#11242#11251#0" expanded="true" />
+                <element signature="e#12383#12392#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -69,9 +69,10 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1490" />
-    <option name="width" value="1520" />
-    <option name="height" value="2010" />
+    <option name="x" value="-11" />
+    <option name="y" value="-11" />
+    <option name="width" value="3022" />
+    <option name="height" value="2022" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -130,7 +131,7 @@
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <option name="MAIN_CLASS_NAME" value="NFAtoDFA" />
       <option name="VM_PARAMETERS" value="" />
-      <option name="PROGRAM_PARAMETERS" value="&quot;C:\Users\Matthew Roth\Documents\GitHub\pa2.0\TestCasesWindows\testcasesWindows\nfa1.txt&quot; &quot;C:\Users\Matthew Roth\Documents\GitHub\pa2.0\TestCasesWindows\testcasesWindows\testout.txt&quot;" />
+      <option name="PROGRAM_PARAMETERS" value="&quot;C:\Users\Matthew Roth\Documents\GitHub\pa2.0\TestCasesWindows\testcasesWindows\nfa5.txt&quot; &quot;C:\Users\Matthew Roth\Documents\GitHub\pa2.0\TestCasesWindows\testcasesWindows\testout.txt&quot;" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
@@ -549,12 +550,12 @@
       <updated>1522966286065</updated>
       <workItem from="1522966291337" duration="2225000" />
       <workItem from="1522969330580" duration="4847000" />
-      <workItem from="1523044098504" duration="3520000" />
+      <workItem from="1523044098504" duration="5120000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10592000" />
+    <option name="totallyTimeSpent" value="12192000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -566,8 +567,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1490" y="0" width="1520" height="2010" extended-state="0" />
-    <editor active="true" />
+    <frame x="-11" y="-11" width="3022" height="2022" extended-state="6" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -579,12 +579,12 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18600868" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18480603" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15153538" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12633333" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -621,13 +621,13 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1918#1928#0" expanded="true" />
-            <element signature="e#1980#1989#0" expanded="true" />
-            <element signature="e#2183#2193#0" expanded="true" />
-            <element signature="e#2530#2539#0" expanded="true" />
-            <element signature="e#5181#5190#0" expanded="true" />
-            <element signature="e#6417#6426#0" expanded="true" />
-            <element signature="e#7558#7567#0" expanded="true" />
+            <element signature="e#2109#2119#0" expanded="true" />
+            <element signature="e#2171#2180#0" expanded="true" />
+            <element signature="e#2374#2384#0" expanded="true" />
+            <element signature="e#2721#2730#0" expanded="true" />
+            <element signature="e#7302#7311#0" expanded="true" />
+            <element signature="e#11242#11251#0" expanded="true" />
+            <element signature="e#12383#12392#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -638,13 +638,13 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1918#1928#0" expanded="true" />
-            <element signature="e#1980#1989#0" expanded="true" />
-            <element signature="e#2183#2193#0" expanded="true" />
-            <element signature="e#2530#2539#0" expanded="true" />
-            <element signature="e#5181#5190#0" expanded="true" />
-            <element signature="e#6417#6426#0" expanded="true" />
-            <element signature="e#7558#7567#0" expanded="true" />
+            <element signature="e#2109#2119#0" expanded="true" />
+            <element signature="e#2171#2180#0" expanded="true" />
+            <element signature="e#2374#2384#0" expanded="true" />
+            <element signature="e#2721#2730#0" expanded="true" />
+            <element signature="e#7302#7311#0" expanded="true" />
+            <element signature="e#11242#11251#0" expanded="true" />
+            <element signature="e#12383#12392#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -707,17 +707,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/NFAtoDFA.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="80" column="43" lean-forward="false" selection-start-line="80" selection-start-column="43" selection-end-line="80" selection-end-column="43" />
+        <state relative-caret-position="600">
+          <caret line="123" column="14" lean-forward="false" selection-start-line="123" selection-start-column="14" selection-end-line="123" selection-end-column="14" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1918#1928#0" expanded="true" />
-            <element signature="e#1980#1989#0" expanded="true" />
-            <element signature="e#2183#2193#0" expanded="true" />
-            <element signature="e#2530#2539#0" expanded="true" />
-            <element signature="e#5181#5190#0" expanded="true" />
-            <element signature="e#6417#6426#0" expanded="true" />
-            <element signature="e#7558#7567#0" expanded="true" />
+            <element signature="e#2109#2119#0" expanded="true" />
+            <element signature="e#2171#2180#0" expanded="true" />
+            <element signature="e#2374#2384#0" expanded="true" />
+            <element signature="e#2721#2730#0" expanded="true" />
+            <element signature="e#7302#7311#0" expanded="true" />
+            <element signature="e#11242#11251#0" expanded="true" />
+            <element signature="e#12383#12392#0" expanded="true" />
           </folding>
         </state>
       </provider>
