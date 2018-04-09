@@ -1,254 +1,269 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.io.*;
+import java.util.*;
 
-public class NFA {
-    private int numberStates;
-    //we can assume input is correct so we don't need to double check with alphabet
-    private char[] alphabet;
-    private ArrayList<TransitionFunction> transitionFunctions;
-    private HashMap<String, HashSet<Integer>> transitionMap;
-    private int startState;
-    private ArrayList<Integer> acceptStates;
+public class nfa{
+	public static void main(String [] args){	
+		String input = args[0];
+		String outFile = args[1];
+		File outputFile = new File(outFile);
+		int numStates;
+		String [] alphabet;
+		int numLetters;
+		String tempVal;
+		ArrayList<Integer>[][] states;
+		String trans;
+		String holder;
+		String [] parts;
+		int qCur;
+		int startState;
+		int qNext;
+		Scanner scanner = null;
+		File inputFile = new File(input);
+		try{
+			scanner = new Scanner(inputFile);
+		}
+		catch(IOException e){
+			System.out.println(e.getMessage());
+		}
+		numStates = scanner.nextInt();
+		scanner.nextLine();
+		tempVal = scanner.nextLine();
+		numLetters = tempVal.length();
+		alphabet = new String[numLetters + 1];
+		for(int i = 0; i<numLetters; i++){
+			alphabet[i] = tempVal.substring(i, i + 1);
+		}
+		alphabet[numLetters] = "e";
+		states = (ArrayList<Integer>[][]) new ArrayList[numStates][numLetters + 1];
+		for(int i = 0; i<numStates; i++){
+			for(int j = 0; j < numLetters + 1; j++){
+				states[i][j] = new ArrayList<>();
+			}
+		}
+		trans = scanner.nextLine();
+		while(scanner.hasNextLine()){
+			if(trans.length()<2){
+				break;
+			}
+			parts = trans.split(" ");
+			qCur = Integer.parseInt(parts[0]);
+			holder = parts[1].substring(1, 2);
+			qNext = Integer.parseInt(parts[2]);
+			trans = scanner.nextLine();
+			boolean found = true;
+			int index = 0;
+			while (found){
+				if(alphabet[index].compareTo(holder) == 0){
+					found = false;
+				}
+				else{
+					index++;
+				}
+			}
+			states[qCur - 1][index].add(qNext);
+		}
+		startState = scanner.nextInt();
+		scanner.nextLine();
+		trans = scanner.nextLine();
+		parts = trans.split(" ");
+		int numAcceptStates = parts.length;
+		int [] acceptStates = new int[numAcceptStates];
+		for(int i = 0; i < parts.length; i++){
+			acceptStates[i] = Integer.parseInt(parts[i]);
+		}
 
-    public NFA(int numberStates, char[] alphabet, ArrayList<TransitionFunction> transitionFunctions, int startState, ArrayList<Integer> acceptStates) {
-        this.numberStates = numberStates;
-        this.alphabet = alphabet;
-        this.transitionFunctions = transitionFunctions;
-        this.startState = startState;
-        this.acceptStates = acceptStates;
-    }
+        ArrayList<dfa> finalDfa = new ArrayList<>();
+        ArrayList<Integer> start = nextStates(states, startState, numLetters, numLetters);
+        start.add(startState);
+        dfa stat = new dfa(start);
+        Queue<dfa> q = new LinkedList<>();
+        q.add(stat);
+        finalDfa.add(stat);
+        dfa temp;
+        int emptySetCount = 0;
+        while(!q.isEmpty()){
+            temp = new dfa(q.remove().states);
+            for(int i = 0; i < numLetters; i++){
+                ArrayList<Integer> allTheNfa = new ArrayList<>();
+                ArrayList<Integer>[] a = (ArrayList<Integer>[]) new ArrayList[temp.size];
+                for(int j = 0; j < temp.states.size(); j++){
+                    a[j] = nextStates(states, temp.states.get(j), i, numLetters);
 
-    public DFA convertToDFA() {
-        //converts NFA to DFA
-        //create DFA
-        DFA dfa=new DFA();
-        //set alphabet, will remain the same
-        dfa.setAlphabet(alphabet);
+                }
+                for (ArrayList<Integer> res : a) {
+                    for (Integer cur : res) {
+                        if (!allTheNfa.contains(cur)) {
+                            allTheNfa.add(cur);
+                        }
+                    }
+                }
 
-        //transitions with same begin state and input made into one transition function with a set for end state
-        ArrayList<SetTransitionFunction> setTransitionFunctions=new ArrayList<>();
-        //going through this original transition function array list and populating new set one
-        while (!transitionFunctions.isEmpty())
-        {
-            //System.out.println("while transitionFunctions is not empty");
-            ArrayList<TransitionFunction> remove=new ArrayList<>();
-            HashSet<Integer> endSet=new HashSet<>();
-            //add end state of reference transition no matter what
-            endSet.add(transitionFunctions.get(0).getEndState());
-            //remove reference transition no matter what
-            remove.add(transitionFunctions.get(0));
-            int referenceBeginState=transitionFunctions.get(0).getBeginState();
-            char referenceInput=transitionFunctions.get(0).getInput();
-            //for loop won't go through if size is 1
-            for (int i=1;i<transitionFunctions.size();i++)
-            {
-                if (referenceBeginState==transitionFunctions.get(i).getBeginState() && referenceInput==transitionFunctions.get(i).getInput())
-                {
-                    endSet.add(transitionFunctions.get(i).getEndState());
-                    remove.add(transitionFunctions.get(i));
+                if(allTheNfa.size() == 0 && emptySetCount == 0){
+                    dfa empty = new dfa(allTheNfa);
+                    finalDfa.add(empty);
+                    emptySetCount++;
+                }
+                if(allTheNfa.size() == 0){
+                    continue;
+                }
+                if(!viewed(finalDfa, allTheNfa)){
+                    dfa e = new dfa(allTheNfa);
+                    q.add(e);
+                    finalDfa.add(e);
                 }
             }
-            //add new transition
-            SetTransitionFunction setTransitionFunction =new SetTransitionFunction(referenceBeginState, referenceInput, endSet);
-            setTransitionFunctions.add(setTransitionFunction);
-
-            //remove independent ones that we converged from old transition function array list
-            transitionFunctions.removeAll(remove);
         }
 
-        //map all the transitions
-        transitionMap=new HashMap<>();
-        for (SetTransitionFunction transition: setTransitionFunctions)
-        {
-            transitionMap.put(transition.getBeginState()+""+transition.getInput(),transition.getEndSet());
+        int [][] dfaState = new int [finalDfa.size()][numLetters];
+        for(int i = 0; i < finalDfa.size(); i++){
+            for(int j = 0; j < numLetters; j++){
+                dfaState[i][j] = -1;
+            }
         }
-
-        LinkedBlockingQueue<HashSet<Integer>> q=new LinkedBlockingQueue<>();
-
-        //array list of transitions with sets for start and end states
-        ArrayList<ConversionTransitionFunction> conversionTransitionFunctions=new ArrayList<>();
-
-        //create loop from new reject state to itself, in case the NFA doesn't have a transition for each symbol out of every state
-        for (char c:alphabet) {
-            HashSet<Integer> temp=new HashSet<>();
-            temp.add(-1);
-            conversionTransitionFunctions.add(new ConversionTransitionFunction(temp, c, temp));
+        ArrayList<Integer> [] tempState;
+        int emptyDfaStateIndex = 0;
+        for(int index = 0; index < finalDfa.size(); index++){
+            if(finalDfa.get(index).empty){
+                emptyDfaStateIndex = index;
+                break;
+            }
         }
+        for(int i = 0; i < numLetters; i++){
+            for(int j = 0; j < finalDfa.size(); j++){
+                tempState = (ArrayList<Integer>[]) new ArrayList[finalDfa.get(j).size];
+                for(int k = 0; k < tempState.length; k++){
+                    tempState[k] = nextStates(states, finalDfa.get(j).states.get(k), i, numLetters);
 
-        //store set of states NFA can be in in start state of DFA
-        HashSet<Integer> beginSet=new HashSet<>();
-        beginSet.add(startState);
-        //add all states that can be reached by epsilon transition, e-closure
-        beginSet=getEpsilonTransitions(beginSet);
+                }
+                ArrayList<Integer> possStates = new ArrayList<>();
+                for (ArrayList<Integer> tomp : tempState) {
+                    for (Integer tempTomp : tomp) {
+                        if (!possStates.contains(tempTomp)) {
+                            possStates.add(tempTomp);
+                        }
+                    }
+                }
+                dfa poss = new dfa(possStates);
+                if(poss.empty){
+                    dfaState[j][i] = emptyDfaStateIndex;
+                    continue;
+                }
+                int count = 0;
+                for (dfa finStat : finalDfa) {
+                    if (compare(finStat, poss)) {
+                        break;
+                    }
+                    count++;
+                }
+                dfaState[j][i] = count;
+            }
+        }
+		PrintWriter printer = null;
+		try{
+			printer = new PrintWriter(outputFile);
+		}
+		catch(IOException e){
+			System.out.println(e.getMessage());
+		}
+        assert printer != null;
+        printer.println(dfaState.length);
+		for(int i = 0; i < alphabet.length - 1; i++){
+			printer.print(alphabet[i]);
+		}
+		printer.println();
+		for(int j = 0; j < finalDfa.size(); j++){
+			for(int k = 0; k < numLetters; k++){
+				if(dfaState[j][k] != -1){
+					printer.println((j + 1) + " "  + "'" + alphabet[k] + "'" + " " + (dfaState[j][k] + 1));
+				}
+			}
+		}
+		printer.println(1);
+		for(int g = 0; g<finalDfa.size(); g++){
+			if(inAccept(finalDfa.get(g), acceptStates)){
+				printer.print((g + 1) + " ");
+			}
+		}
+		printer.close();
 
-        //get transitions from this beginSet, add them to conversionTransitionFunctions, put their end sets in q to get transitions for those end sets
-        getTransitions(q, conversionTransitionFunctions, beginSet);
+	}
 
-        //before transitions out of every created set of states are made
-        while (!q.isEmpty()) {
-            //System.out.println("while q is not empty");
-            HashSet<Integer> newBeginSet=q.poll();
-            //check if the set we dequeue is equal to beginSet of a transition we have already completed
-            boolean setExists=false;
-            for (ConversionTransitionFunction currentTransition:conversionTransitionFunctions) {
-                if (currentTransition.getBeginSet().equals(newBeginSet))
-                {
-                    setExists=true;
+	private static boolean viewed(ArrayList<dfa> d, ArrayList<Integer> allTheNfa){
+		boolean ret = false;
+		int count;
+        for (dfa state : d) {
+            count = 0;
+            if (state.states.size() == allTheNfa.size()) {
+                for (int j = 0; j < allTheNfa.size(); j++) {
+                    for (Integer anAllTheNfa : allTheNfa) {
+                        if (state.states.get(j).equals(anAllTheNfa)){
+                            count++;
+                        }
+                    }
                 }
             }
-
-            if (!setExists)
-            {
-                getTransitions(q,conversionTransitionFunctions,newBeginSet);
+            if (count == allTheNfa.size()) {
+                ret = true;
             }
         }
+	return ret;
+	}
 
-        //creation of transitions done
-        //these transitions' states are sets that the NFA can be in, convert label to arbitrary number to represent set
-        ArrayList<TransitionFunction> transitionFunctionsDFA=getDFATransitions(conversionTransitionFunctions, dfa, beginSet);
-        dfa.setTransitionFunctions(transitionFunctionsDFA);
-        return dfa;
-    }
+	private static ArrayList<Integer> nextStates(ArrayList<Integer>[][] N, int currentState, int symbolIndex, int numLetters){
+		ArrayList<Integer> nextStates = new ArrayList<>();
+		int i = 0;
+		while(i < N[currentState-1][symbolIndex].size()){
+			if(N[currentState-1][symbolIndex].get(i) != null){
+				nextStates.add(N[currentState-1][symbolIndex].get(i));
+				i++;
+			}
+		}
+		for(int j = 0; j<nextStates.size(); j++){
+			if(N[nextStates.get(j)-1][numLetters-1] != null){
+                nextStates.addAll(N[nextStates.get(j) - 1][numLetters]);
+			}
+		}
+		return nextStates;
+	}
 
-    private HashSet<Integer> getEpsilonTransitions(HashSet<Integer> beginSet) {
-        //gets the epsilon transitions for given set
-        HashSet<Integer> epsilonEndSet=new HashSet<Integer>();
-        for (int state:beginSet) {
-            HashSet<Integer> temp=transitionMap.get(state+"e");
-            if (temp!=null)
-            {
-                epsilonEndSet.addAll(temp);
-            }
-        }
-        if (beginSet.addAll(epsilonEndSet))
-        {
-            beginSet=getEpsilonTransitions(beginSet);
-        }
-        return beginSet;
-    }
+	private static boolean compare(dfa a, dfa b){
+		boolean ret = true;
+		if(a.size == b.size){
+			for(int i = 0; i < a.size; i++){
+				if(!b.states.contains(a.states.get(i))){
+					ret = false;
+					break;
+				}
+			}
+		}
+		else{
+			ret = false;
+		}
+		
+		return ret;
+	}
 
-    private ArrayList<TransitionFunction> getDFATransitions(ArrayList<ConversionTransitionFunction> conversionTransitionFunctions, DFA dfa, HashSet<Integer> startSet) {
-        //create array list TransitionFunctions for DFA from array list of ConversionTransitionFunctions
-        ArrayList<ConversionTransitionFunction> updatedTransitions=new ArrayList<>();
-
-        int numberStatesDFA=0;
-        int stateNumberDFA=1;
-        HashSet<Integer> acceptStatesDFA=new HashSet<>();
-        int startStateDFA=-1;
-        //set DFA state for all begin sets
-        while (!conversionTransitionFunctions.isEmpty())
-        {
-            //System.out.println("while conversionTransitionFunctions is not empty");
-            ArrayList<ConversionTransitionFunction> remove=new ArrayList<>();
-            HashSet<Integer> referenceBeginSet= conversionTransitionFunctions.get(0).getBeginSet();
-            conversionTransitionFunctions.get(0).setBeginStateDFA(stateNumberDFA);
-            //remove reference transition no matter what
-            remove.add(conversionTransitionFunctions.get(0));
-            //check if conversionTransitionFunction is a start state or contains an accept state
-            if (conversionTransitionFunctions.get(0).getBeginSet().equals(startSet))
-            {
-                startStateDFA=stateNumberDFA;
-            }
-            for (int state:conversionTransitionFunctions.get(0).getBeginSet()) {
-                for (int acceptState: acceptStates) {
-                    if (state==acceptState)
-                        acceptStatesDFA.add(stateNumberDFA);
+	private static boolean inAccept(dfa a, int [] acceptStates){
+		boolean ret = false;
+		for(int i = 0; i < a.size; i++){
+            for (int acceptState : acceptStates) {
+                if (a.states.get(i) == acceptState) {
+                    ret = true;
                 }
             }
-            //for loop won't go through if size is 1
-            for (int i = 1; i< conversionTransitionFunctions.size(); i++)
-            {
-                if (referenceBeginSet.equals(conversionTransitionFunctions.get(i).getBeginSet()))
-                {
-                    conversionTransitionFunctions.get(i).setBeginStateDFA(stateNumberDFA);
-                    remove.add(conversionTransitionFunctions.get(i));
-                }
-            }
+		}
+		return ret;
+	}
+}
 
-            updatedTransitions.addAll(remove);
-            conversionTransitionFunctions.removeAll(remove);
+class dfa {
+	ArrayList<Integer> states= new ArrayList<>();
+	boolean empty;
+	int size;
 
-            numberStatesDFA++;
-            stateNumberDFA++;
-        }
-        dfa.setNumberStates(numberStatesDFA);
-        ArrayList<Integer> listAcceptStates=new ArrayList<>(acceptStatesDFA);
-        dfa.setAcceptStates(listAcceptStates);
-        dfa.setStartState(startStateDFA);
-
-        //set DFA state for all the end sets
-        for (ConversionTransitionFunction transition:updatedTransitions)
-        {
-            HashSet<Integer>referenceSet=transition.getBeginSet();
-            int referenceDFAState=transition.getBeginStateDFA();
-            for (int i=0;i<updatedTransitions.size();i++)
-            {
-                if (updatedTransitions.get(i).getEndSet().equals(referenceSet))
-                    updatedTransitions.get(i).setEndStateDFA(referenceDFAState);
-            }
-        }
-
-        ArrayList<TransitionFunction> transitionsDFA=new ArrayList<>();
-        for (ConversionTransitionFunction transition:updatedTransitions) {
-            //create TransitionFunction array list for DFA
-            TransitionFunction temp=new TransitionFunction(transition.getBeginStateDFA(), transition.getInput(), transition.getEndStateDFA());
-            transitionsDFA.add(temp);
-        }
-
-        return transitionsDFA;
-    }
-
-    private void getTransitions(LinkedBlockingQueue<HashSet<Integer>> q, ArrayList<ConversionTransitionFunction> conversionTransitionFunctions, HashSet<Integer> beginSet) {
-        //gets transitions from given set and enqueues endset if needed to get transitions for rest of machine
-        //every DFA state needs a transition with every symbol from the alphabet
-        for (char c:alphabet)
-        {
-            HashSet<Integer> endSet=new HashSet<>();
-            //we compile the end states from each start state in the start set into an end set
-            for (int state:beginSet)
-            {
-                HashSet<Integer> temp=transitionMap.get(state+""+c);
-                if (temp!=null) {
-                    endSet.addAll(temp);
-                }
-            }
-            //if the set is empty then this is a new reject state, because the NFA didn't specify an option for the symbol
-            //if end set is not empty, check for epsilon transitions to add those states as well
-            if (!endSet.isEmpty()) {
-                //get set of all possible states epsilon transitions can reach
-                endSet=getEpsilonTransitions(endSet);
-            }
-            else
-            //there are no transitions for this symbol, make one to reject state
-            {
-                endSet.add(-1);
-            }
-            ConversionTransitionFunction transition=new ConversionTransitionFunction(beginSet,c,endSet);
-
-            //check to see if a transition already exists which has the start set of the transition we just created's end set
-            //if so, then we don't need to enqueue the end set, because transitions have already (or will be) been created for it
-            boolean setExists=false;
-            for (ConversionTransitionFunction current:conversionTransitionFunctions) {
-                if (transition.getEndSet().equals(current.getBeginSet()))
-                {
-                    setExists=true;
-                    break;
-                }
-            }
-            if (!setExists)
-            //enqueue the end set, to do a breadth-first creation of DFA transitions
-            {
-                try {
-                    q.put(endSet);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            //add transition to conversionTransitionFunctions
-            conversionTransitionFunctions.add(transition);
-        }
-    }
+	public dfa(ArrayList<Integer> state){
+        empty = state.size() == 0;
+		this.states = state;
+		this.size = states.size();
+	}
 }
